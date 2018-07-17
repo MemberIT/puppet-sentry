@@ -106,6 +106,33 @@ class sentry::service (
     subscribe   => Class['::sentry::config'],
   }
 
+  # Sentry Web
+  file { '/etc/systemd/system/sentry-web.service':
+    ensure  => present,
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
+    content => template('sentry/sentry-web.service.erb'),
+    notify  => Exec['enable-sentry-services'],
+  }
+
+  service { 'sentry-web':
+    ensure     => $_service_ensure,
+    enable     => $workers_enabled,
+    hasrestart => true,
+    require    => [ File['/etc/systemd/system/sentry-web.service'],
+                    User[$user],
+                  ],
+  }
+
+  # if the Sentry config changes, do a full restart of the Sentry web worker
+  exec { 'restart-sentry-web':
+    command     => 'systemctl stop sentry-web; systemctl start sentry-web',
+    path        => '/bin:/usr/bin',
+    refreshonly => true,
+    subscribe   => Class['::sentry::config'],
+  }
+
   # Setup log rotation
   logrotate::rule { 'sentry-worker':
     ensure       => present,

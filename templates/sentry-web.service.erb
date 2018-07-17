@@ -1,0 +1,18 @@
+[Unit]
+Description=Sentry Web
+After=network.target
+
+[Service]
+User=<%= @user %>
+Group=<%= @group %>
+Type=simple
+PIDFile=<%= @path %>/sentry-web.pid
+Environment=VIRTUAL_ENV="<%= @path %>"
+Environment=PATH="$VIRTUAL_ENV/bin:$PATH"
+WorkingDirectory=<%= @path %>
+ExecStart=<%= @path %>/bin/sentry --config=<%= @path %> run web
+ExecStop=/bin/kill -KILL $MAINPID
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

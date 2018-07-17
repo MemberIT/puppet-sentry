@@ -32,6 +32,9 @@ class sentry::config (
   $statsd_port       = $sentry::statsd_port,
   $url_prefix        = $sentry::url_prefix,
   $user              = $sentry::user,
+  $wsgi_host         = $sentry::wsgi_host,
+  $wsgi_port         = $sentry::wsgi_port,
+  $wsgi_workers      = $sentry::wsgi_workers,
 ) {
   assert_private()
 

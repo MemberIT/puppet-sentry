@@ -48,10 +48,6 @@
 # @param redis_port port to use for Redis (6379)
 # @param secret_key string used to hash cookies (fqdn_rand_string(40))
 # @param smtp_host name or IP of SMTP server (localhost)
-# @param ssl_ca Apache SSL CA cert
-# @param ssl_chain Apache SSL Intermediate CA cert
-# @param ssl_cert Apache SSL public cert
-# @param ssl_key Apache SSL private key
 # @param statsd_host hostname of statsd server (localhost)
 # @param statsd_port port for statsd server (8125)
 # @param url source URL from which to install Sentry.  (false, use PyPI)
@@ -59,8 +55,7 @@
 # @param version the Sentry version to install
 # @param url_prefix Sentry URL for error reporting, used when generating DSN files
 # @param vhost the URL at which users will access the Sentry GUI
-# @param wsgi_processes mod_wsgi processes
-# @param wsgi_threads mod_wsgi threads
+# @param wsgi_workers the number of gunicorn workers
 # @param worker_concurrency number of concurrent workers (processors.count)
 # @param workers_enabled Should the worker and cron services be running
 #
@@ -99,10 +94,6 @@ class sentry (
   $redis_port                       = $sentry::params::redis_port,
   $secret_key                       = $sentry::params::secret_key,
   $smtp_host                        = $sentry::params::smtp_host,
-  $ssl_ca                           = $sentry::params::ssl_ca,
-  $ssl_chain                        = $sentry::params::ssl_chain,
-  $ssl_cert                         = $sentry::params::ssl_cert,
-  $ssl_key                          = $sentry::params::ssl_key,
   String  $statsd_host              = $sentry::params::statsd_host,
   Integer $statsd_port              = $sentry::params::statsd_port,
   $url                              = $sentry::params::url,
@@ -110,8 +101,9 @@ class sentry (
   $user                             = $sentry::params::user,
   $version                          = $sentry::params::version,
   $vhost                            = $sentry::params::vhost,
-  $wsgi_processes                   = $sentry::params::wsgi_processes,
-  $wsgi_threads                     = $sentry::params::wsgi_threads,
+  $wsgi_host                        = $sentry::params::wsgi_host,
+  $wsgi_port                        = $sentry::params::wsgi_port,
+  $wsgi_workers                     = $sentry::params::wsgi_workers,
   $wsgi_user                        = $sentry::params::wsgi_user,
   $wsgi_group                       = $sentry::params::wsgi_group,
   $worker_concurrency               = $sentry::params::worker_concurrency,
@@ -138,11 +130,10 @@ class sentry (
   Class['::sentry::service'] ~>
   Class['::sentry::wsgi']
 
-  # restart apache on any change
-  Class['::sentry::setup'] ~> Class['::apache::service']
-  Class['::sentry::config'] ~> Class['::apache::service']
-  Class['::sentry::install'] ~> Class['::apache::service']
-  Class['::sentry::wsgi'] ~> Class['::apache::service']
+  Class['::sentry::setup'] ~> Class['::nginx::service']
+  Class['::sentry::config'] ~> Class['::nginx::service']
+  Class['::sentry::install'] ~> Class['::nginx::service']
+  Class['::sentry::wsgi'] ~> Class['::nginx::service']
 
   # Write out a list of "team/project dsn" values to a file.
   # Apache will serve this list and Puppet will consume to set
