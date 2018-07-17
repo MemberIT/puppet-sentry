@@ -151,6 +151,7 @@ SENTRY_WEB_OPTIONS = {
     'workers': <%= @wsgi_workers %>,  # the number of gunicorn workers
     'limit_request_line': 0,  # required for raven-js
     'secure_scheme_headers': {'X-FORWARDED-PROTO': 'https'},
+    'protocol': 'uwsgi',
 }
 
 <% if @ldap_host -%>
