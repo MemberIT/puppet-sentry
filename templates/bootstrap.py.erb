@@ -34,7 +34,7 @@ om = OrganizationMember.objects.create(
 )
 
 t = Team()
-t.name = <%= @team %>
+t.name = '<%= @team %>'
 t.organization = o
 t.save()
 OrganizationMemberTeam.objects.create(
