@@ -9,7 +9,7 @@ Type=simple
 Environment=VIRTUAL_ENV="<%= @path %>"
 Environment=PATH="$VIRTUAL_ENV/bin:$PATH"
 WorkingDirectory=<%= @path %>
-ExecStart=<%= @path %>/bin/sentry --config=<%= @path %> run worker -f /var/log/sentry/sentry-worker.log --concurrency <%= scope['::sentry::worker_concurrency'] %>
+ExecStart=<%= @path %>/bin/sentry --config=<%= @path %> run worker --concurrency <%= scope['::sentry::worker_concurrency'] %>
 ExecStop=/bin/kill -KILL $MAINPID
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always

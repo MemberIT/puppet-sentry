@@ -133,31 +133,4 @@ class sentry::service (
     subscribe   => Class['::sentry::config'],
   }
 
-  # Setup log rotation
-  logrotate::rule { 'sentry-worker':
-    ensure       => present,
-    path         => '/var/log/sentry/sentry-worker.log',
-    create       => true,
-    compress     => true,
-    missingok    => true,
-    rotate       => 14,
-    ifempty      => false,
-    create_mode  => '0644',
-    create_owner => $user,
-    create_group => $group,
-  }
-
-  logrotate::rule { 'sentry-cron':
-    ensure       => present,
-    path         => '/var/log/sentry/sentry-cron.log',
-    create       => true,
-    compress     => true,
-    missingok    => true,
-    rotate       => 14,
-    ifempty      => false,
-    create_mode  => '0644',
-    create_owner => $user,
-    create_group => $group,
-  }
-
 }

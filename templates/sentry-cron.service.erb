@@ -10,7 +10,7 @@ PIDFile=<%= @path %>/sentry-cron.pid
 Environment=VIRTUAL_ENV="<%= @path %>"
 Environment=PATH="$VIRTUAL_ENV/bin:$PATH"
 WorkingDirectory=<%= @path %>
-ExecStart=<%= @path %>/bin/sentry --config=<%= @path %> run cron -f /var/log/sentry/sentry-cron.log --pidfile=<%= @path %>/sentry-cron.pid
+ExecStart=<%= @path %>/bin/sentry --config=<%= @path %> run cron --pidfile=<%= @path %>/sentry-cron.pid
 ExecStop=/bin/kill -KILL $MAINPID
 ExecReload=/bin/kill -HUP $MAINPID
 

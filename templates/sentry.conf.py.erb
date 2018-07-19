@@ -79,7 +79,7 @@ CACHES = {
 # information on configuring your queue broker and workers. Sentry relies
 # on a Python framework called Celery to manage queues.
 
-BROKER_URL = 'redis://<%= @redis_host%>:<%= @redis_port %>'
+BROKER_URL = 'redis://<%= @redis_host%>:<%= @redis_port %>/0'
 
 ##################
 ### Rate Limits ##
